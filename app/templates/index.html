@@ -5,15 +5,31 @@
   <a href="/search">Search for a song here!</a>
   <p onclick='toggleAudio()' '>Toggle Play</p>
   <p onclick="myFunction()">Click me to change my text color.</p>
-  <p onclick="playAudio()">Play Song.</p>
+  <p onclick="playAudio('1KDYN3odJHnj9pqGHN3FVs')">Play Song.</p>
+  <p onclick="getState()">Get State.</p>
+  <p onclick="addToQueue()">Add to Queue</p>
+  <p onclick="monitorPlayBack()">Is Over</p>
+
 <body>
+
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
+
+
+
   <script>
 
     var player;
     var token;
+    var position;
+    var duration = 25000;
+    var timer = 500;
+    var isPlaying = 1;
+
+    var songQueue = [];
+
     window.onSpotifyWebPlaybackSDKReady = () => {
-      token = 'BQC7jlON9nXiGWY5fm1eTvlxXtAMbksqcJ7vskhCXt1-oM__UziIr-mlIHT9710ky6_p0KdyYn_kgy7Qfx8WAwrXzHGz5BCrFO9nWE3NRQpzJhMCYTe-1sz2o-K5WEa71iLrgAIc2Ol2xh1rM6VLUn8yexo2vh3OUn0VqMN8';
+
+      token = 'BQCArgQoNlQTePELW6buAWkYRE28615vkYM-bdJoqW_JYnePO2Yx0zz3OYSj9vN_pa-B7hv0_IzfrneStPBFUBHJIrJmTL0UoQz6u6jw_SUHJJZGGuxClMkgYFYaWZuF-Dj73-Q70wzpO1J_TVVnpk_2rKy2nmn2SO5MTPhj';
 
       player = new Spotify.Player({
         name: 'Web Playback SDK Quick Start Player',
@@ -27,7 +43,11 @@
       player.addListener('playback_error', ({ message }) => { console.error(message); });
 
       // Playback status updates
-      player.addListener('player_state_changed', state => { console.log(state); });
+      player.addListener('player_state_changed', state => {
+        console.log(state);
+        position = state.position;
+        duration = state.duration;
+      });
 
       // Ready
       player.addListener('ready', ({ device_id }) => {
@@ -41,7 +61,16 @@
 
       // Connect to the player!
       player.connect();
+
+
     };
+
+    function monitorPlayBack(){
+
+      player.getCurrentState().then(state => {
+        console.log(state);
+      });
+    }
 
     function myFunction(){
       player.getVolume().then(volume => {
@@ -51,13 +80,22 @@
     }
 
     function toggleAudio(){
-      console.log('attempting to pause');
-      player.togglePlay().then(() => {
-        console.log('Toggled playback!');
-      });
+      if (isPlaying)
+      {
+        player.pause().then(() => {
+          console.log('Paused!');
+          isPlaying = 0;
+        });
+      }
+      else {
+        player.resume().then(() => {
+          console.log('Resumed!');
+          isPlaying = 1;
+        });
+      }
     }
 
-    function playAudio(){
+    function playAudio(id){
 
       const play = ({
         spotify_uri,
@@ -82,11 +120,69 @@
 
       play({
         playerInstance: player,
-        spotify_uri: 'spotify:track:2DnJjbjNTV9Nd5NOa1KGba',
+        spotify_uri: 'spotify:track:' + id,
       });
     }
 
+    function isOver(length){
+
+      var bo = false;
+
+      player.getCurrentState().then(state => {
+
+        if (parseInt(state.position) > length)
+        {
+          return 0;
+        }
+      });
+
+      return 1;
+    }
+
+    function testIsOver(){
+
+      if (isOver(30 * 1000)){
+        console.log("Over 30 seconds");
+      } else {
+        console.log("Under 30 seconds");
+      }
+
+      if (isOver(60 * 1000)){
+        console.log("Over 60 seconds");
+      } else {
+        console.log("Under 60 seconds");
+      }
+    }
+
+    function printStuff(){
+      console.log(15);
+    }
+
+    //Runs code on interval (milliseconds)
+    const runInterval = 500;
+
+    setInterval(function() {
+      var pos;
+
+
+      if (isPlaying){
+        timer += runInterval;
+      }
+
+
+      console.log(timer.toString() + " " + duration);
+
+      if (timer > duration){
+
+        playAudio("1KDYN3odJHnj9pqGHN3FVs");
+        duration = 25000;
+        timer = 0;
+      }
+
+    }, runInterval);
+
 
   </script>
+
   </body>
 {% endblock %}
