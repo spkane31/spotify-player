@@ -45,13 +45,13 @@ import pprint
 
 def search_song(search_criteria):
 
+  # returns the top search item given an artist
+
   client_credentials_manager = SpotifyClientCredentials()
   sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-# if len(sys.argv) > 1:
   artist_name = search_criteria#' '.join(sys.argv[1:])
-  results = sp.search(q=artist_name, limit=1)
-  return results
-  pprint.pprint(results)
-  for i, t in enumerate(results['tracks']['items']):
-    print(' ', i, t['name'])
+  results = sp.search(q=search_criteria, limit=1)
+  song_title = results['tracks']['items'][0]['name']
+  artist_name = results['tracks']['items'][0]['artists'][0]['name']
+  return song_title, artist_name
