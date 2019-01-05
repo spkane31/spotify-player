@@ -1,13 +1,14 @@
-from flask import render_template
+from flask import render_template, request
 from app import app
 import json, requests
 
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
-import sys
+import sys, json
 import spotipy.util as util
 
 from . import spotipy_functions
+# from . import queueImplementation
 
 @app.route('/')
 @app.route('/index')
@@ -26,6 +27,32 @@ def get_token():
 
 @app.route('/search')
 def search():
+  
+  song_title, artist_name, uri, runtime = spotipy_functions.search_song('Ariana Grande')
+  
+  write_string = str(song_title).replace(',','') + ", " + str(artist_name).replace(',','') + ", " + str(uri) + ", " + str(runtime) + ", 0, 0\n" 
+  with open("app/queue.txt", 'a') as f:
+    f.write(write_string)
 
-  song_title, artist_name = spotipy_functions.search_song('Ariana Grande')
-  return render_template('search.html', song=song_title, artist=artist_name)
+
+  return render_template('search.html', song=song_title, artist=artist_name, uri=uri, runtime=runtime)
+
+@app.route('/search_again', methods=['GET', 'POST'])
+def search_again():
+  print(request.method)
+  if request.method == 'POST':
+    if request.form.get('Search') == 'Search':
+      print('Searched')
+      result = 5
+  elif request.method == 'GET':
+    print('Not SEARCHED')
+    result = 10
+
+  return render_template('search_again.html', result=result)
+
+
+@app.route('/queue')
+def queue():
+  results  = open("app/queue.txt", "r")
+  
+  return render_template('queue.html', results=results)
