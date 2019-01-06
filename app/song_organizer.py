@@ -27,11 +27,29 @@ def OrderSong(filename):
 
   OrganizedList = sorted(ListScore,key=itemgetter(-1))
   OrganizedList = OrganizedList[::-1]
-  with open("queue.txt", "w") as f:
+  with open("app/queue.txt", "w") as f:
     for q in OrganizedList:
-      write_string = str(q[0]).replace(',','') + ", " + str(q[1][1:]).replace(',','') + ", " + str(q[2][1:]) + ", " + str(q[3][1:]) + "," + str(q[-3]) + "," + str(q[-2])# + "\n"
-      f.write("%s\n" % write_string)
+      write_string = str(q[0]).replace(',','') + ", " + str(q[1][1:]).replace(',','') + ", " + str(q[2][1:]) + ", " + str(q[3][1:]) + "," + str(q[-3]) + "," + str(q[-2])+"\n"
+      f.write("%s" % write_string)
 
   return OrganizedList
 
-(OrderSong('queue.txt'))
+def remove(cookie):
+  results = open("app/queue.txt", "r")
+  data =[]
+  queue = []
+  with open("app/queue.txt", "r") as f:
+    data = f.readlines()
+
+  for d in data:
+    d = d.split(',')
+    if cookie not in d[2]:
+      queue += [d]
+
+  with open("app/queue.txt", "w") as f:
+    for q in queue:
+      write_string = str(q[0]).replace(',','') + ", " + str(q[1][1:]).replace(',','') + ", " + str(q[2][1:]) + ", " + str(q[3][1:]) + "," + str(q[-2]) + "," + str(q[-1])
+      f.write("%s" % write_string)
+
+(OrderSong('app/queue.txt'))
+remove('2zYzyRzz6pRmhPzyfMEC8s')

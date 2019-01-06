@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Search Results:</h1>
-  <div>Song Title: {{ song }} by: {{ artist }} has been added to your queue!</div>
+
+  <style>
+
+  .style1 {
+    color: whitesmoke;
+  }
+  </style>
+  <h1 class=style1>Search Results:</h1>
+  <div class=style1>Song Title: {{ song }} by: {{ artist }} has been added to your queue!</div>
   <!-- <div>{{ artist }}</div> -->
   <!-- <div>{{ uri }}</div> -->
   <!-- <div>{{ runtime }}</div> -->
