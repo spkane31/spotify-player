@@ -2,22 +2,67 @@
 
 {% block content %}
   <!-- {{ results }} -->
+
+  <style>
+    body {
+      background-color: DarkSlateGray ;
+    }
+    
+    th {
+      color: white;
+      font-size: 30px;
+      text-decoration: underline;
+      text-align: center;
+    }
+
+td {
+  color: white;
+  margin-left: 20px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.blink_me {
+  color: white;
+  text-align: center;
+  font-size: 25px;
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+
+}
+
+    </style>
+  <div class="blink_me">VOTE ON THE MUSIC YOU WANT!!</div>
+  <h1>UPVOTE</h1>
+  {% from "_formhelpers.html" import render_field %}
+  <form method=post>
+    <dl>
+      <p>
+      {{ render_field(form.search) }}
+    </dl>
+    <p><input type=submit value=voteButton>
+  </form>
+  
   <table style="width:80%">
   <tr>
-    <th>Song Name</th>
-    <th>Artist</th>
-    <th>Upvotes</th>
-    <th>Downvotes</th>
+    <th class=style1>Song Name</th>
+    <th class=style1>Artist</th>
+    <th class=style1>Upvotes</th>
+    <th class=style1>Downvotes</th>
   </tr>
-  {% for result in results %}
+  {% for result in other %}
   <tr>
-    <td>{{ result[0] }}</td>
-    <td>{{ result[1] }}</td>
-    <td>{{ result[-2] }}</td>
-    <td>{{ result[-1] }}</td>
+    <td class=style1>{{ result[0] }}</td>
+    <td class=style1>{{ result[1] }}</td>
+    <td class=style1>{{ result[-2] }}</td>
+    <td class=style1>{{ result[-1] }}</td>
   </tr>
 
-    <!-- <p>{{result[0]}} by {{ result[1] }} has {{ result[-2] }} <div onclick='upvote()'>upvotes</div> and {{ result[-1] }} <div onclick='downvote()'>downvotes</div>.</p> -->
   {% endfor %}
 </table>
   {% endblock %}

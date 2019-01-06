@@ -1,32 +1,87 @@
 <html>
   <head>
-    Welcome to Spotify Player
+    <h1 class='center'>Welcome to Spotify Player</h1>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-
+    <!-- <link rel="stylesheet" href="css/sean_style.css" type="text/css"> -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    
+    <style>
+    
+    body {
+      background-color: rgba(42, 42, 46, 1);
+    }
 
+    .center {
+      text-align: center;
+      color: whitesmoke;
+    }
+
+    .queue {
+      text-align: center;
+      color: whitesmoke;
+    }
+
+    .search {
+      text-align: center;
+      color: whitesmoke;
+    }
+
+    a {
+      color: whitesmoke;
+    }
+
+    .playcontrols {
+      text-align: center;
+      color: whitesmoke;
+      text-emphasis: 10;
+    }
+
+    .artist {
+      text-align: center;
+      color: lightgray;
+      vertical-align: middle;
+    }
+
+    .song {
+      text-align: center;
+      color: lightgrey;
+      vertical-align: middle;
+    }
+
+    .pause {
+      text-align: center;
+      color: lightgrey;
+      vertical-align: middle;
+    }
+
+    </style>
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
   </head>
   <body>
-    <div>Spotify Player: <a href="/index"></a>Home</div>
-    <div><a href="/queue">Queue</a></div>
-    <div>
+    <h2 class="center"><a href="/index">Spotify Player: Home</a></h2>
+    
+    <div class="queue">
+      <a href="/queue">Queue</a>
+    </div>
+    
+    <div class="search">
       <a target="_blank" rel="noopener noreferrer" href="/search">Search</a>
     </div>
+    
     <hr>
     {% block content %}{% endblock %}
   </body>
 
   <footer>
 
-    <p onclick="toggleAudio()">Toggle Play</p>
-    <p onclick="myFunction()">Click me to change my text color.</p>
+    <p onclick="toggleAudio()" class="playcontrols">Toggle Play</p>
+    <!-- <p onclick="myFunction()">Click me to change my text color.</p> -->
     <p onclick="playAudio('1KDYN3odJHnj9pqGHN3FVs')">Play Song.</p>
-    <p onclick="getState()">Get State.</p>
-    <p onclick="addToQueue()">Add to Queue</p>
-    <p onclick="monitorPlayBack()">Is Over</p>
+    <!-- <p onclick="getState()">Get State.</p> -->
+    <!-- <p onclick="addToQueue()">Add to Queue</p> -->
+    <!-- <p onclick="monitorPlayBack()">Is Over</p> -->
 
     <body>
 
@@ -46,7 +101,7 @@
 
         window.onSpotifyWebPlaybackSDKReady = () => {
 
-          token = 'BQBpIa-beQ12t5VBARzzWAkR4Rbe-UVsly4KUdpeb6D9DdTN8ZRpKkpFt8m37Ag66rp9QP555yQIG3jw3wuHLUrwAWfvW3fH4UPcKc06zUtUsXx8PGZ5yQbrDTERooD07yViPF-5H4bbZBTAZuHx5jMNJQSkXv7VyLlvWw';
+          token = 'BQA9uAzRzTvcy7WwGJAH0ZWiJX9gxgJJMyKM35-hdkHsgySh_NTcbFzTJw1jgVlEfNgNoNS-cDCI6VgPwYLBRQ6IAwy9fWWw0FJBaG2LvLdj85o5S_P20yC2CcQEV0SC9_wA45KuBapahm1DY0SaU4ES1Gq7kxJMD1GwZw';
           //token = 'BQCArgQoNlQTePELW6buAWkYRE28615vkYM-bdJoqW_JYnePO2Yx0zz3OYSj9vN_pa-B7hv0_IzfrneStPBFUBHJIrJmTL0UoQz6u6jw_SUHJJZGGuxClMkgYFYaWZuF-Dj73-Q70wzpO1J_TVVnpk_2rKy2nmn2SO5MTPhj';
 
           player = new Spotify.Player({
@@ -299,27 +354,29 @@
     </body>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <footer class="container-fluid bg-grey py-4" style="background: #818181;">
+    
+    
+    <footer class="container-fluid bg-grey py-4" style="background: lightgrey;">
     <div class="container">
       <div class="row">
-        <div class="col-md-2" style="background: #000000;"></div>
+        <div class="col-md-2" style="background: #000000;" border-radius: 15px;></div>
           <div class="col-md-8" style="background: #FF0000;">
             <div class="row">
               <div class="col-md-2" style="background: #FF0000;">
                 <img id="albumArtID" src="https://i.scdn.co/image/77eb7c17cafe55023812e" alt="Avatar"  width="100" height="100" style="border-radius: 50%;">
               </div>
-              <div class="col-md-8" style="background: #00FF00;">
+              <div class="col-md-8" style="background: rgb(14, 102, 48);">
                 <div class="col">
                   <div class="row-md-7">
-                 <h1 id="SongName" style="font-family:Arial Black;" style="font-size:75%;" > Song Name <h1>
-               </div>
-                  <div class="row-md-5">
-                 <h4 id="ArtistName" style="font-family:Arial Black" style="font-size:75%;"> Artist <h4>
-               </div>
-                </div>
+                 <h1 class="song" id="SongName" style="font-family:Arial Black;" style="font-size:75%;" > Song Name <h1>
               </div>
+                  <div class="row-md-5">
+                 <h4 class="artist" id="ArtistName" style="font-family:Arial Black" style="font-size:75%;"> Artist <h4>
+              </div>
+                </div>
+                </div>
               <div class="col-md-2" style="background: #0000FF;">
-                <p>Press to Pause</p>
+                <p class="pause">Press to Pause</p>
               </div>
            </div>
           </div>
