@@ -27,10 +27,10 @@ def get_token():
 
 @app.route('/search')
 def search():
-  
+
   song_title, artist_name, uri, runtime = spotipy_functions.search_song('Ariana Grande')
-  
-  write_string = str(song_title).replace(',','') + ", " + str(artist_name).replace(',','') + ", " + str(uri) + ", " + str(runtime) + ", 0, 0\n" 
+
+  write_string = str(song_title).replace(',','') + ", " + str(artist_name).replace(',','') + ", " + str(uri) + ", " + str(runtime) + ", 0, 0\n"
   with open("app/queue.txt", 'a') as f:
     f.write(write_string)
 
@@ -54,5 +54,13 @@ def search_again():
 @app.route('/queue')
 def queue():
   results  = open("app/queue.txt", "r")
-  
+
   return render_template('queue.html', results=results)
+
+
+
+@app.route('/queue.txt')
+def queue2():
+  results  = open("app/queue.txt", "r")
+
+  return render_template(f.read(), mimetype='text/plain')
