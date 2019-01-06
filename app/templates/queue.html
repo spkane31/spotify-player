@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block content %}
   <!-- {{ results }} -->
   <table style="width:80%">
@@ -15,9 +16,30 @@
     <td>{{ result[1] }}</td>
     <td>{{ result[-2] }}</td>
     <td>{{ result[-1] }}</td>
-  </tr>
+    <td>
+      <script>
+
+        function cookieSearch(key) {
+          let c = document.cookie,
+          result;
+
+          if (c.includes(`${key}=`)) {
+            result = `${key} = ${c.split(`${key}=`)[1].split(`;`)[0]}`;
+          } else {
+            result = `<span style="color: red">Key not found in cookie.</span>`;
+          }
+
+          return result;
+        }
+
+        document.getElementById("demo").innerHTML = cookieSearch("removeSong");
+      </script>
+      <p id="demo"></p>
+    </td>
 
     <!-- <p>{{result[0]}} by {{ result[1] }} has {{ result[-2] }} <div onclick='upvote()'>upvotes</div> and {{ result[-1] }} <div onclick='downvote()'>downvotes</div>.</p> -->
   {% endfor %}
 </table>
   {% endblock %}
+
+  <!-- document.getElementById("demo").innerHTML = document.cookie -->

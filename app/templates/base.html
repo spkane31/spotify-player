@@ -10,7 +10,7 @@
 
   </head>
   <body>
-    <div>Spotify Player: <a href="/index"></a>Home</div>
+    <div>Spotify Player: <a href="/index">Home</a></div>
     <div><a href="/queue">Queue</a></div>
     <div>
       <a target="_blank" rel="noopener noreferrer" href="/search">Search</a>
@@ -46,7 +46,7 @@
 
         window.onSpotifyWebPlaybackSDKReady = () => {
 
-          token = 'BQBpIa-beQ12t5VBARzzWAkR4Rbe-UVsly4KUdpeb6D9DdTN8ZRpKkpFt8m37Ag66rp9QP555yQIG3jw3wuHLUrwAWfvW3fH4UPcKc06zUtUsXx8PGZ5yQbrDTERooD07yViPF-5H4bbZBTAZuHx5jMNJQSkXv7VyLlvWw';
+          token = 'BQBUDDYo_KF0TZe-1ir4soLCiajkncSTd_SJaY2GxwB58EJUIXW8RvbwBcBhIjuxO171MnP7pYa24OJmLpzW4gXGFD_PXHIhMyPFnJG3TQ32ttc1MKYJ3HtSctC6Mucs4GwdiXc6XK0pGGEE9v9t0nZFLmHBP8lGwKJUfA';
           //token = 'BQCArgQoNlQTePELW6buAWkYRE28615vkYM-bdJoqW_JYnePO2Yx0zz3OYSj9vN_pa-B7hv0_IzfrneStPBFUBHJIrJmTL0UoQz6u6jw_SUHJJZGGuxClMkgYFYaWZuF-Dj73-Q70wzpO1J_TVVnpk_2rKy2nmn2SO5MTPhj';
 
           player = new Spotify.Player({
@@ -87,7 +87,7 @@
           // Connect to the player!
           player.connect();
 
-
+          document.cookie = "position=0;path=/";
         };
 
         function monitorPlayBack(){
@@ -150,6 +150,7 @@
           });
 
           isPlaying = 1;
+          //firstRun = 0;
         }
 
         function isOver(length){
@@ -190,6 +191,33 @@
 
           return albumArtURL;
         }
+
+        function cookieSearch(key) {
+          let c = document.cookie;
+          let result;
+
+          if (c.indexOf(key) > 0) {
+            var location = c.indexOf(key);
+
+            result = 0;
+
+            console.log(c.substring(location, location + 3));
+
+
+
+          } else {
+            if (key == "position")
+            {
+              result = 0;
+            }  else {
+              result = `<span style="color: red">Key not found in cookie.</span>`;
+            }
+            result = 0;
+          }
+          console.log(result);
+          return result;
+        }
+
         //Runs code on interval (milliseconds)
         const runInterval = 500;
 
@@ -197,57 +225,102 @@
 
           var pos;
 
-
-          if (firstRun == 1 && isPlaying)
-          {
-            var stringPos;
-            console.log(document.cookie);
-            if ( document.cookie.indexOf(';') < 9)
-            {
-              stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9);
-            }
-            else {
-              stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
-            }
-            //var stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
-            player.seek(parseInt(stringPos, 10)).then(() => {
-              console.log('Changed position to ' + stringPos);
-            });
-            firstRun = 0;
-          }
-
-
           if (isPlaying && firstRun == 0){
             timer += runInterval;
           }
 
-          var stringPos;
-          console.log(document.cookie);
-          if ( document.cookie.indexOf(';') < 9)
+          if (firstRun == 1 && isPlaying)
+          {
+            /*if ( document.cookie.indexOf(';') < 6)
+            {
+              stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9);
+              if (stringPos == NaN)
+              {
+                stringPos = 0;
+              }
+              console.log(stringPos);
+            }
+            else {
+              stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
+            }
+
+            //console.log("cookie search: " + cookieSearch("position"));
+            //var stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
+            //console.log('Changed position to ' + stringPos);
+            if (isNaN(stringPos))
+            {
+              stringPos = 0;
+              console.log(0);
+            }
+            else {
+              timer = parseInt(stringPos, 10);
+            }
+
+            player.seek(parseInt(stringPos, 10)).then(() => {
+              console.log('Changed position to ' + stringPos);
+            });*/
+            firstRun = 0;
+          }
+
+
+
+          /*var stringPos = parseInt(cookieSearch("position"),10);
+          if (isNaN(stringPos))
+          {
+            stringPos = 0;
+            console.log(0);
+          }
+          else
+          {
+            console.log(stringPos);
+          }
+          //console.log("cookie search: " + stringPos);
+
+          /*if ( document.cookie.indexOf(';') < 6)
           {
             stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9);
+
           }
           else {
             stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
           }
-          if (timer >= stringPos)
+
+
+
+
+          if (timer >= parseInt(stringPos,10))
           {
-            var positionCookie = "position=" + timer;
+            var positionCookie = "position=" + timer + ";path=/";
             document.cookie = positionCookie;
+            console.log(positionCookie);
 
-          } else {
-            timer = stringPos;
           }
+          if (stringPos > timer && parseInt(stringPos,10) != NaN)
+          {
+            if (parseInt(stringPos, 10) == NaN)
+            {
+              timer = 0;
+            }
+            else {
+              timer = parseInt(stringPos, 10);
+            }
+            console.log("Greater");
 
-          console.log(document.cookie);
+          }
+          else
+          {
+            timer = parseInt(stringPos,10);
+          }
+          //console.log("Value: " + stringPos);
+          //console.log("Whole cookie" - document.cookie);
           //var albumArt = document.getElementById('albumArtID');
           //albumArt.src = "https://i.scdn.co/image/77eb7c17cafe550238f91a744a3a1929c0e9d12e";
           //albumArt.alt = "https://i.scdn.co/image/77eb7c17cafe550238f91a744a3a1929c0e9d12e";
 
 
 
-          console.log(timer.toString() + " " + duration);
-          duration = 60000;
+          console.log(timer.toString() + " " + duration);*/
+          duration = 7000;
 
 
 
@@ -262,6 +335,7 @@
                 var s1 = text.substring(text.indexOf('spotify:track:'));
                 var s2 = s1.substring(s1.indexOf('spotify:track:') + 14, 36);
 
+                document.cookie = "removeSong=" + s2 + ";path=/";
                 //console.log(s1);
                 console.log(s2);
 
@@ -280,7 +354,7 @@
             firstRun = 0;
             //duration = 25000;
             timer = 0;
-            var positionCookie = "position=0";
+            var positionCookie = "position=0;path=/";
             document.cookie = positionCookie;
 
 
