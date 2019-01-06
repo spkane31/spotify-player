@@ -1,19 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Search Results:</h1>
+  <a href="/search_again">Search another song</a> -->
 
-  <div>{{ song }} by: {{ artist }}</div>
-
-  <div>{{uri}}</div>
-  <div>{{runtime}}</div>
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-  <!-- The form -->
-  <form class="example" action="action_page.php">
-    <input type="text" placeholder="Search.." name="search" value="Search">
-    <button type="submit"><i class="fa fa-search"></i></button>
-  </form>
-  <a href="/search_again">Search another song</a>
+  <h1>Search</h1>
+  {% from "_formhelpers.html" import render_field %}
+<form method=post>
+  <dl>
+    {{ render_field(form.select) }} 
+    <p>
+    {{ render_field(form.search) }}
+  </dl>
+  <p><input type=submit value=Search>
+</form>
 {% endblock %}

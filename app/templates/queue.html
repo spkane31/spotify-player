@@ -1,10 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+  <!-- {{ results }} -->
+  <table style="width:80%">
+  <tr>
+    <th>Song Name</th>
+    <th>Artist</th>
+    <th>Upvotes</th>
+    <th>Downvotes</th>
+  </tr>
+  {% for result in results %}
+  <tr>
+    <td>{{ result[0] }}</td>
+    <td>{{ result[1] }}</td>
+    <td>{{ result[-2] }}</td>
+    <td>{{ result[-1] }}</td>
+  </tr>
 
-  {%for result in results %}
-  <p>{{ result }}</p>
+    <!-- <p>{{result[0]}} by {{ result[1] }} has {{ result[-2] }} <div onclick='upvote()'>upvotes</div> and {{ result[-1] }} <div onclick='downvote()'>downvotes</div>.</p> -->
   {% endfor %}
-
-  <!-- <p>{{ results }}</p> -->
-{% endblock %}
+</table>
+  {% endblock %}
