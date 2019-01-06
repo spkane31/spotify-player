@@ -37,11 +37,19 @@ def search_results(search):
   results = []
   search_string = search.data['search']
   song_title, artist_name, uri, runtime = spotipy_functions.search_song(search_string)
+<<<<<<< HEAD
   write_string = str(song_title).replace(',','') + ", " + str(artist_name).replace(',','') + ", " + str(uri) + ", " + str(runtime) + ", 0, 0\n"
   with open("app/queue.txt", 'a') as f:
     f.write(write_string)
   return render_template('search_results.html', song=song_title, artist=artist_name, uri=uri, runtime=runtime)
 
+=======
+  write_string = str(song_title).replace(',','') + ", " + str(artist_name).replace(',','') + ", " + str(uri) + ", " + str(runtime) + ", 0, 0\n" 
+  with open("app/queue.txt", 'a') as f:
+    f.write(write_string)
+  return render_template('search_results.html', song=song_title, artist=artist_name, uri=uri, runtime=runtime)
+  
+>>>>>>> a9e2f59f00bdeac3c5b92c56cdf4db007bbfa91e
 
 @app.route('/search_again', methods=['GET', 'POST'])
 def search_again():
@@ -67,9 +75,17 @@ def queue():
     c = c.split(',')
     results += [c]
   return render_template('queue.html', results=results)
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> a9e2f59f00bdeac3c5b92c56cdf4db007bbfa91e
   strings = []
   for r in results:
     stringTemp = r[0] + 'by' + r[1] + 'has a net vote of:' + r[-2] + '-' + r[-1]
     strings += [stringTemp]
+<<<<<<< HEAD
   return render_template('queue.html', results=strings, other=results)
+=======
+  return render_template('queue.html', results=strings, other=results)
+>>>>>>> a9e2f59f00bdeac3c5b92c56cdf4db007bbfa91e
