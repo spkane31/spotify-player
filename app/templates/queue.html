@@ -53,14 +53,14 @@ td {
     <th class=style1>Song Name</th>
     <th class=style1>Artist</th>
     <th class=style1>Upvotes</th>
-    <th class=style1>Downvotes</th>
+    <!-- <th class=style1>Downvotes</th> -->
   </tr>
   {% for result in other %}
   <tr>
     <td class=style1>{{ result[0] }}</td>
     <td class=style1>{{ result[1] }}</td>
     <td class=style1>{{ result[-2] }}</td>
-    <td class=style1>{{ result[-1] }}</td>
+    <!-- <td class=style1>{{ result[-1] }}</td> -->
   </tr>
 
   {% endfor %}

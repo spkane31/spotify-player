@@ -1,2 +1,4 @@
-All Star, Smash Mouth, spotify:track:3cfOd4CMv2snFaKAnMdnvK, 200373, 9, 0
-ABCD (Friend Zone), PnB Rock, spotify:track:4i9rpfkivlHZHDE1pRGZMO, 168787, 8, 0
+ABCD (Friend Zone), PnB Rock, spotify:track:4i9rpfkivlHZHDE1pRGZMO, 168787, 9, 0
+All Star, Smash Mouth, spotify:track:3cfOd4CMv2snFaKAnMdnvK, 200373, 2, 0
+MAMA (feat. Nicki Minaj Kanye West), 6ix9ine, spotify:track:1oJ8EDr2pv94IvSd6ZmDgo, 192405, 1, 0
+ABC, The Jackson 5, spotify:track:6wDviYDtmSDZ0S6TVMM9Vc, 177733, 0, 0

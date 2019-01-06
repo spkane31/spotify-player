@@ -1,389 +1,454 @@
 <html>
-  <head>
-    <h1 class='center'>Welcome to Spotify Player</h1>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-    <!-- <link rel="stylesheet" href="css/sean_style.css" type="text/css"> -->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    
-    <style>
-    
-    body {
-      background-color: rgba(42, 42, 46, 1);
-    }
-
-    .center {
-      text-align: center;
-      color: whitesmoke;
-    }
-
-    .queue {
-      text-align: center;
-      color: whitesmoke;
-    }
-
-    .search {
-      text-align: center;
-      color: whitesmoke;
-    }
-
-    a {
-      color: whitesmoke;
-    }
-
-    .playcontrols {
-      text-align: center;
-      color: whitesmoke;
-      text-emphasis: 10;
-    }
-
-    .artist {
-      text-align: center;
-      color: lightgray;
-      vertical-align: middle;
-    }
-
-    .song {
-      text-align: center;
-      color: lightgrey;
-      vertical-align: middle;
-    }
-
-    .pause {
-      text-align: center;
-      color: lightgrey;
-      vertical-align: middle;
-    }
-
-    </style>
-
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-  </head>
-  <body>
-    <h2 class="center"><a href="/index">Spotify Player: Home</a></h2>
-    
-    <div class="queue">
-      <a href="/queue">Queue</a>
-    </div>
-    
-    <div class="search">
-      <a target="_blank" rel="noopener noreferrer" href="/search">Search</a>
-    </div>
-    
-    <hr>
-    {% block content %}{% endblock %}
-  </body>
-
-  <footer>
-
-    <p onclick="toggleAudio()" class="playcontrols">Toggle Play</p>
-    <!-- <p onclick="myFunction()">Click me to change my text color.</p> -->
-    <p onclick="playAudio('1KDYN3odJHnj9pqGHN3FVs')">Play Song.</p>
-    <!-- <p onclick="getState()">Get State.</p> -->
-    <!-- <p onclick="addToQueue()">Add to Queue</p> -->
-    <!-- <p onclick="monitorPlayBack()">Is Over</p> -->
-
+    <head>
+      Welcome to Spotify Player
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  
+      <style>
+  
+      body {
+        background-color: rgba(42, 42, 46, 1);
+      }
+      .center {
+        text-align: center;
+        color: whitesmoke;
+      }
+      .queue {
+        text-align: center;
+        color: whitesmoke;
+      }
+      .search {
+        text-align: center;
+        color: whitesmoke;
+      }
+      a {
+        color: whitesmoke;
+      }
+      .playcontrols {
+        text-align: center;
+        color: whitesmoke;
+        text-emphasis: 10;
+      }
+      .artist {
+        text-align: center;
+        color: lightgray;
+        vertical-align: middle;
+      }
+      .song {
+        text-align: center;
+        color: lightgrey;
+        vertical-align: middle;
+      }
+      .pause {
+        text-align: center;
+        color: lightgrey;
+        vertical-align: middle;
+      }
+      </style>
+  
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  
+    </head>
     <body>
-
-      <script src="https://sdk.scdn.co/spotify-player.js"></script>
-
-      <script>
-
-        var player;
-        var token;
-        var position;
-        var duration = 25000;
-        var timer = 500;
-        var isPlaying = 0;
-        var firstRun = 1;
-
-        var songQueue = [];
-
-        window.onSpotifyWebPlaybackSDKReady = () => {
-
-          token = 'BQA9uAzRzTvcy7WwGJAH0ZWiJX9gxgJJMyKM35-hdkHsgySh_NTcbFzTJw1jgVlEfNgNoNS-cDCI6VgPwYLBRQ6IAwy9fWWw0FJBaG2LvLdj85o5S_P20yC2CcQEV0SC9_wA45KuBapahm1DY0SaU4ES1Gq7kxJMD1GwZw';
-          //token = 'BQCArgQoNlQTePELW6buAWkYRE28615vkYM-bdJoqW_JYnePO2Yx0zz3OYSj9vN_pa-B7hv0_IzfrneStPBFUBHJIrJmTL0UoQz6u6jw_SUHJJZGGuxClMkgYFYaWZuF-Dj73-Q70wzpO1J_TVVnpk_2rKy2nmn2SO5MTPhj';
-
-          player = new Spotify.Player({
-            name: 'Web Playback SDK Quick Start Player',
-            getOAuthToken: cb => { cb(token); }
-          });
-
-          // Error handling
-          player.addListener('initialization_error', ({ message }) => { console.error(message); });
-          player.addListener('authentication_error', ({ message }) => { console.error(message); });
-          player.addListener('account_error', ({ message }) => { console.error(message); });
-          player.addListener('playback_error', ({ message }) => { console.error(message); });
-
-          // Playback status updates
-          player.addListener('player_state_changed', state => {
-            console.log(state);
-            position = state.position;
-            duration = state.duration;
-
-              var albumArt = document.getElementById('albumArtID');
-              albumArt.src = state.track_window.current_track.album.images[0].url;
-              albumArt.alt = "https://i.scdn.co/image/77eb7c17cafe550238f91a744a3a1929c0e9d12e";
-
-              document.getElementById('SongName').innerHTML = state.track_window.current_track.name;
-              document.getElementById('ArtistName').innerHTML = state.track_window.current_track.artists[0].name;
-          });
-
-          // Ready
-          player.addListener('ready', ({ device_id }) => {
-            console.log('Ready with Device ID', device_id);
-          });
-
-          // Not Ready
-          player.addListener('not_ready', ({ device_id }) => {
-            console.log('Device ID has gone offline', device_id);
-          });
-
-          // Connect to the player!
-          player.connect();
-
-
-        };
-
-        function monitorPlayBack(){
-
-          player.getCurrentState().then(state => {
-            console.log(state);
-          });
-        }
-
-        function myFunction(){
-          player.getVolume().then(volume => {
-            let volume_percentage = volume * 100;
-            console.log(`The volume of the player is ${volume}%`);
-          });
-        }
-
-        function toggleAudio(){
-          if (isPlaying)
-          {
-            player.pause().then(() => {
-              console.log('Paused!');
-              isPlaying = 0;
+      <div>Spotify Player: <a href="/index">Home</a></div>
+      <div><a target="_blank" rel = "noopener noreferrer" href="/queue">Queue</a></div>
+      <div>
+        <a target="_blank" rel="noopener noreferrer" href="/search">Search</a>
+      </div>
+      <hr>
+      {% block content %}{% endblock %}
+    </body>
+  
+    <footer>
+  
+      <p onclick="toggleAudio()">Toggle Play</p>
+      <p onclick="myFunction()">Click me to change my text color.</p>
+      <input type="button" onClick="playAudio('1KDYN3odJHnj9pqGHN3FVs')">Play Song.</input>
+      <!-- <button onclick="playAudio('1KDYN3odJHnj9pqGHN3FVs')">Play Song.</button> -->
+      <p onclick="getState()">Get State.</p>
+      <p onclick="addToQueue()">Add to Queue</p>
+      <p onclick="monitorPlayBack()">Is Over</p>
+  
+      <body>
+  
+        <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  
+        <script>
+  
+          var player;
+          var token;
+          var position;
+          var duration = 25000;
+          var timer = 500;
+          var isPlaying = 0;
+          var firstRun = 1;
+  
+          var songQueue = [];
+  
+          window.onSpotifyWebPlaybackSDKReady = () => {
+  
+            token = 'BQD1-qacT4oEhZuAX68iaMdUIo2_5H8FzaDs-hNFkXqBBnJEPjqvTTP-kQV0xMGS1bflWdzSy9FeqrJXHRo7j7HX-BJfKC4WUOYWMJ1c6wh1VxHLbx6fHzDGlRxyZzc9J7tS84GwvI2ffqWcGZT6N2-129d2IjvADradKg';
+            //token = 'BQCArgQoNlQTePELW6buAWkYRE28615vkYM-bdJoqW_JYnePO2Yx0zz3OYSj9vN_pa-B7hv0_IzfrneStPBFUBHJIrJmTL0UoQz6u6jw_SUHJJZGGuxClMkgYFYaWZuF-Dj73-Q70wzpO1J_TVVnpk_2rKy2nmn2SO5MTPhj';
+  
+            player = new Spotify.Player({
+              name: 'Web Playback SDK Quick Start Player',
+              getOAuthToken: cb => { cb(token); }
             });
-          }
-          else {
-            player.resume().then(() => {
-              console.log('Resumed!');
-              isPlaying = 1;
+  
+            // Error handling
+            player.addListener('initialization_error', ({ message }) => { console.error(message); });
+            player.addListener('authentication_error', ({ message }) => { console.error(message); });
+            player.addListener('account_error', ({ message }) => { console.error(message); });
+            player.addListener('playback_error', ({ message }) => { console.error(message); });
+  
+            // Playback status updates
+            player.addListener('player_state_changed', state => {
+              console.log(state);
+              position = state.position;
+              duration = state.duration;
+  
+                var albumArt = document.getElementById('albumArtID');
+                albumArt.src = state.track_window.current_track.album.images[0].url;
+                albumArt.alt = "https://i.scdn.co/image/77eb7c17cafe550238f91a744a3a1929c0e9d12e";
+  
+                document.getElementById('SongName').innerHTML = state.track_window.current_track.name;
+                document.getElementById('ArtistName').innerHTML = state.track_window.current_track.artists[0].name;
             });
-          }
-        }
-
-        function playAudio(id){
-
-
-          const play = ({
-            spotify_uri,
-            playerInstance: {
-              _options: {
-                getOAuthToken,
-                id
-              }
-            }
-          }) => {
-            getOAuthToken(access_token => {
-              fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
-                method: 'PUT',
-                body: JSON.stringify({ uris: [spotify_uri] }),
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${access_token}`
-                },
-              });
+  
+            // Ready
+            player.addListener('ready', ({ device_id }) => {
+              console.log('Ready with Device ID', device_id);
             });
+  
+            // Not Ready
+            player.addListener('not_ready', ({ device_id }) => {
+              console.log('Device ID has gone offline', device_id);
+            });
+  
+            // Connect to the player!
+            player.connect();
+  
+            document.cookie = "position=0;path=/";
           };
-
-          play({
-            playerInstance: player,
-            spotify_uri: 'spotify:track:' + id,
-          });
-
-          isPlaying = 1;
-        }
-
-        function isOver(length){
-
-          var bo = false;
-
-          player.getCurrentState().then(state => {
-
-            if (parseInt(state.position) > length)
+  
+          function monitorPlayBack(){
+  
+            player.getCurrentState().then(state => {
+              console.log(state);
+            });
+          }
+  
+          function myFunction(){
+            player.getVolume().then(volume => {
+              let volume_percentage = volume * 100;
+              console.log(`The volume of the player is ${volume}%`);
+            });
+          }
+  
+          function toggleAudio(){
+            var button = document.getElementById('pauseID');
+  
+            if (isPlaying)
             {
-              return 0;
+              player.pause().then(() => {
+                console.log('Paused!');
+                isPlaying = 0;
+                button.src="http://www.virtualinspections.com.au/wp-content/uploads/2018/12/Play-Button-Transparent-Background.png";
+              });
             }
-          });
-
-          return 1;
-        }
-
-        function testIsOver(){
-
-          if (isOver(30 * 1000)){
-            console.log("Over 30 seconds");
-          } else {
-            console.log("Under 30 seconds");
+            else {
+              player.resume().then(() => {
+                console.log('Resumed!');
+                isPlaying = 1;
+                button.src="http://pluspng.com/img-png/pause-button-png-pause-pause-button-pause-file-pause-music-pause-video-icon-512.png";
+              });
+            }
           }
-
-          if (isOver(60 * 1000)){
-            console.log("Over 60 seconds");
-          } else {
-            console.log("Under 60 seconds");
+  
+          function playAudio(id){
+  
+  
+            const play = ({
+              spotify_uri,
+              playerInstance: {
+                _options: {
+                  getOAuthToken,
+                  id
+                }
+              }
+            }) => {
+              getOAuthToken(access_token => {
+                fetch(`https://api.spotify.com/v1/me/player/play?device_id=${id}`, {
+                  method: 'PUT',
+                  body: JSON.stringify({ uris: [spotify_uri] }),
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${access_token}`
+                  },
+                });
+              });
+            };
+  
+            play({
+              playerInstance: player,
+              spotify_uri: 'spotify:track:' + id,
+            });
+  
+            isPlaying = 1;
+            //firstRun = 0;
           }
-        }
-
-        function printStuff(){
-          console.log(15);
-        }
-
-        function getImageUrl(){
-
-          return albumArtURL;
-        }
-        //Runs code on interval (milliseconds)
-        const runInterval = 500;
-
-        setInterval(function() {
-
-          var pos;
-
-
-          if (firstRun == 1 && isPlaying)
-          {
-            var stringPos;
-            console.log(document.cookie);
-            if ( document.cookie.indexOf(';') < 9)
+  
+          function isOver(length){
+  
+            var bo = false;
+  
+            player.getCurrentState().then(state => {
+  
+              if (parseInt(state.position) > length)
+              {
+                return 0;
+              }
+            });
+  
+            return 1;
+          }
+  
+          function testIsOver(){
+  
+            if (isOver(30 * 1000)){
+              console.log("Over 30 seconds");
+            } else {
+              console.log("Under 30 seconds");
+            }
+  
+            if (isOver(60 * 1000)){
+              console.log("Over 60 seconds");
+            } else {
+              console.log("Under 60 seconds");
+            }
+          }
+  
+          function printStuff(){
+            console.log(15);
+          }
+  
+          function getImageUrl(){
+  
+            return albumArtURL;
+          }
+  
+          function cookieSearch(key) {
+            let c = document.cookie;
+            let result;
+  
+            if (c.indexOf(key) > 0) {
+              var location = c.indexOf(key);
+  
+              result = 0;
+  
+              console.log(c.substring(location, location + 3));
+  
+  
+  
+            } else {
+              if (key == "position")
+              {
+                result = 0;
+              }  else {
+                result = `<span style="color: red">Key not found in cookie.</span>`;
+              }
+              result = 0;
+            }
+            console.log(result);
+            return result;
+          }
+  
+          //Runs code on interval (milliseconds)
+          const runInterval = 500;
+  
+          setInterval(function() {
+  
+            var pos;
+  
+            if (isPlaying){
+              timer += runInterval;
+              console.log(timer);
+            }
+  
+            if (firstRun == 1 && isPlaying)
+            {
+              /*if ( document.cookie.indexOf(';') < 6)
+              {
+                stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9);
+                if (stringPos == NaN)
+                {
+                  stringPos = 0;
+                }
+                console.log(stringPos);
+              }
+              else {
+                stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
+              }
+  
+              //console.log("cookie search: " + cookieSearch("position"));
+              //var stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
+              //console.log('Changed position to ' + stringPos);
+              if (isNaN(stringPos))
+              {
+                stringPos = 0;
+                console.log(0);
+              }
+              else {
+                timer = parseInt(stringPos, 10);
+              }
+  
+              player.seek(parseInt(stringPos, 10)).then(() => {
+                console.log('Changed position to ' + stringPos);
+              });*/
+              firstRun = 0;
+            }
+  
+  
+  
+            /*var stringPos = parseInt(cookieSearch("position"),10);
+            if (isNaN(stringPos))
+            {
+              stringPos = 0;
+              console.log(0);
+            }
+            else
+            {
+              console.log(stringPos);
+            }
+            //console.log("cookie search: " + stringPos);
+  
+            /*if ( document.cookie.indexOf(';') < 6)
             {
               stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9);
+  
             }
             else {
               stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
             }
-            //var stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
-            player.seek(parseInt(stringPos, 10)).then(() => {
-              console.log('Changed position to ' + stringPos);
-            });
-            firstRun = 0;
-          }
-
-
-          if (isPlaying && firstRun == 0){
-            timer += runInterval;
-          }
-
-          var stringPos;
-          console.log(document.cookie);
-          if ( document.cookie.indexOf(';') < 9)
-          {
-            stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9);
-          }
-          else {
-            stringPos = document.cookie.substring(document.cookie.indexOf('position=') + 9, document.cookie.indexOf(';'));
-          }
-          if (timer >= stringPos)
-          {
-            var positionCookie = "position=" + timer;
-            document.cookie = positionCookie;
-
-          } else {
-            timer = stringPos;
-          }
-
-          console.log(document.cookie);
-          //var albumArt = document.getElementById('albumArtID');
-          //albumArt.src = "https://i.scdn.co/image/77eb7c17cafe550238f91a744a3a1929c0e9d12e";
-          //albumArt.alt = "https://i.scdn.co/image/77eb7c17cafe550238f91a744a3a1929c0e9d12e";
-
-
-
-          console.log(timer.toString() + " " + duration);
-          duration = 60000;
-
-
-
-
-          //  document.getElementById('output').innerHTML = state.track_window.current_track.album.images[0];
-
-          if (timer > duration ){
-            var qString;
-            var queue = fetch('queue')
-              .then(response => response.text())
-              .then(text => {
-                var s1 = text.substring(text.indexOf('spotify:track:'));
-                var s2 = s1.substring(s1.indexOf('spotify:track:') + 14, 36);
-
-                //console.log(s1);
-                console.log(s2);
-
-                playAudio(s2);
-
-                //var idCookie = "id=" + s2;
-                //document.cookie = idCookie;
-
-              });
-
-              if (firstRun == 1){
-
+  
+  
+  
+  
+            if (timer >= parseInt(stringPos,10))
+            {
+              var positionCookie = "position=" + timer + ";path=/";
+              document.cookie = positionCookie;
+              console.log(positionCookie);
+  
+            }
+            if (stringPos > timer && parseInt(stringPos,10) != NaN)
+            {
+              if (parseInt(stringPos, 10) == NaN)
+              {
+                timer = 0;
               }
-            //var qString = String(queue);
-
-            firstRun = 0;
-            //duration = 25000;
-            timer = 0;
-            var positionCookie = "position=0";
-            document.cookie = positionCookie;
-
-
-          }
-
-
-
-            //state.track_window.current_track.album.images[0];
-
-
-        }, runInterval);
-
-
-        </script>
-
-    </body>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-    
-    <footer class="container-fluid bg-grey py-4" style="background: lightgrey;">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-2" style="background: #000000;" border-radius: 15px;></div>
-          <div class="col-md-8" style="background: #FF0000;">
-            <div class="row">
-              <div class="col-md-2" style="background: #FF0000;">
-                <img id="albumArtID" src="https://i.scdn.co/image/77eb7c17cafe55023812e" alt="Avatar"  width="100" height="100" style="border-radius: 50%;">
-              </div>
-              <div class="col-md-8" style="background: rgb(14, 102, 48);">
-                <div class="col">
-                  <div class="row-md-7">
-                 <h1 class="song" id="SongName" style="font-family:Arial Black;" style="font-size:75%;" > Song Name <h1>
-              </div>
-                  <div class="row-md-5">
-                 <h4 class="artist" id="ArtistName" style="font-family:Arial Black" style="font-size:75%;"> Artist <h4>
-              </div>
+              else {
+                timer = parseInt(stringPos, 10);
+              }
+              console.log("Greater");
+  
+            }
+            else
+            {
+              timer = parseInt(stringPos,10);
+            }
+            //console.log("Value: " + stringPos);
+            //console.log("Whole cookie" - document.cookie);
+            //var albumArt = document.getElementById('albumArtID');
+            //albumArt.src = "https://i.scdn.co/image/77eb7c17cafe550238f91a744a3a1929c0e9d12e";
+            //albumArt.alt = "https://i.scdn.co/image/77eb7c17cafe550238f91a744a3a1929c0e9d12e";
+  
+  
+  
+            console.log(timer.toString() + " " + duration);*/
+            duration = 7000;
+  
+  
+  
+  
+            //  document.getElementById('output').innerHTML = state.track_window.current_track.album.images[0];
+  
+            if (timer > duration ){
+              var qString;
+              var queue = fetch('queue')
+                .then(response => response.text())
+                .then(text => {
+                  var s1 = text.substring(text.indexOf('spotify:track:'));
+                  var s2 = s1.substring(s1.indexOf('spotify:track:') + 14, s1.indexOf('spotify:track:') + 36);
+                  console.log(s2);
+                  document.cookie = "removeSong=" + s2 + ";path=/";
+                  //console.log(s1);
+  
+  
+                  playAudio(s2);
+  
+                  //var idCookie = "id=" + s2;
+                  //document.cookie = idCookie;
+  
+                });
+  
+                if (firstRun == 1){
+  
+                }
+              //var qString = String(queue);
+  
+              firstRun = 0;
+              //duration = 25000;
+              timer = 0;
+              var positionCookie = "position=0;path=/";
+              document.cookie = positionCookie;
+  
+  
+            }
+  
+  
+  
+              //state.track_window.current_track.album.images[0];
+  
+  
+          }, runInterval);
+  
+  
+          </script>
+  
+      </body>
+  
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <footer class="container-fluid bg-grey py-4" style="background: lightgrey;">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-2" style="background: #000000;" border-radius: 15px;></div>
+            <div class="col-md-8" style="background: #FF0000;">
+              <div class="row">
+                <div class="col-md-2" style="background: #FF0000;">
+                  <img id="albumArtID" src="https://i.scdn.co/image/77eb7c17cafe55023812e" alt="Avatar"  width="100" height="100" style="border-radius: 50%;">
                 </div>
+                <div class="col-md-8" style="background: rgb(14, 102, 48);">
+                  <div class="col">
+                    <div class="row-md-7">
+                   <h1 class="song" id="SongName" style="font-family:Arial Black;" style="font-size:75%;" > Song Name <h1>
                 </div>
-              <div class="col-md-2" style="background: #0000FF;">
-                <p class="pause">Press to Pause</p>
-              </div>
-           </div>
+                    <div class="row-md-5">
+                   <h4 class="artist" id="ArtistName" style="font-family:Arial Black" style="font-size:75%;"> Artist <h4>
+                </div>
+                  </div>
+                  </div>
+                <div class="col-md-2" style="background: #0000FF;">
+                    <img onclick="toggleAudio()" id="pauseID" src="http://pluspng.com/img-png/pause-button-png-pause-pause-button-pause-file-pause-music-pause-video-icon-512.png" alt="Avatar"  width="100" height="100" style="border-radius: 50%;">
+                </div>
+             </div>
+            </div>
+          <div class="col-md-2" style="background: #000000;">
           </div>
-        <div class="col-md-2" style="background: #000000;">
         </div>
       </div>
-    </div>
-    </footer>
-
-</html>
+      </footer>
+  
+  </html>
+  

@@ -17,11 +17,11 @@ def index():
   req = requests.get('http://localhost:5000')
   try:
     cookie = req.cookies['removeSong']
+    print(cookie)
     song_organizer.remove(cookie)
   except:
     pass
-  
-  song_organizer.remove(cookie)
+
 
   return render_template('index.html', title='Home')
 
@@ -38,6 +38,7 @@ def search():
   search = MusicSearchForm(request.form)
   if request.method == 'POST':
     return search_results(search)
+
   return render_template('search.html', form=search)
 
 
@@ -46,12 +47,13 @@ def search_results(search):
   results = []
   search_string = search.data['search']
   song_title, artist_name, uri, runtime = spotipy_functions.search_song(search_string)
-  write_string = str(song_title).replace(',','') + ", " + str(artist_name).replace(',','') + ", " + str(uri) + ", " + str(runtime) + ", 0, 0\n" 
+  write_string = str(song_title).replace(',','') + ", " + str(artist_name).replace(',','') + ", " + str(uri) + ", " + str(runtime) + ", 0, 0\n"
   # print(write_string)
   with open("app/queue.txt", 'a') as f:
     f.write(write_string)
+
   return render_template('search_results.html', song=song_title, artist=artist_name, uri=uri, runtime=runtime)
-  
+
 
 @app.route('/search_again', methods=['GET', 'POST'])
 def search_again():
@@ -69,6 +71,23 @@ def search_again():
 
 @app.route('/queue', methods=['GET','POST'])
 def queue():
+  # req = requests.get('http://localhost:5000')
+  req = requests.Session()
+  # cookies = req.cookies
+  # print(cookies)
+  removed = 'nope'
+  if 'removeSong' in request.cookies:
+      removed='yes'
+      song_organizer.remove(request.cookies['removeSong'])
+  try:
+    cookie = req.cookies['removeSong']
+    # print(cookie)
+    # song_organizer.remove(cookie)
+    removed='yes'
+  except:
+    # removed='no'
+    pass
+
   voteButton = UpvoteButton(request.form)
   if request.method == 'POST':
     return vote(voteButton)
@@ -80,7 +99,7 @@ def queue():
     c = c.split(',')
     results += [c]
   # return render_template('queue.html', results=results, other=results, form=voteButton)
-  print(results)
+
   try:
     strings = []
     for r in results:
@@ -88,8 +107,8 @@ def queue():
       strings += [stringTemp]
   except:
     strings = [[], []]
-  print(strings)
-  return render_template('queue.html', results=strings, other=results, form=voteButton)
+
+  return render_template('queue.html', results=strings, other=results, form=voteButton, removed=removed)
 
 
 @app.route('/vote')
@@ -97,7 +116,7 @@ def vote(song_name):
   results = []
   vote_number = song_name.data['search']
   spotipy_functions.upvote('a', 'b', int(vote_number))
-  
+
   song_organizer.OrderSong('app/queue.txt')
 
   with open("app/queue.txt", "r") as f:
@@ -106,12 +125,12 @@ def vote(song_name):
   for c in content:
     c = c.split(',')
     results += [c]
-  
+
   strings = []
   for r in results:
     stringTemp = r[0] + 'by' + r[1] + 'has a net vote of:' + r[-2] + '-' + r[-1]
     strings += [stringTemp]
-  
+
   voteButton = UpvoteButton(request.form)
   return render_template('queue.html', results=strings, other=results, form=voteButton)
 
@@ -129,7 +148,7 @@ def vote(song_name):
 #   for c in content:
 #     c = c.split(',')
 #     results += [c]
-  
+
 #   strings = []
 #   for r in results:
 #     stringTemp = r[0] + 'by' + r[1] + 'has a net vote of:' + r[-2] + '-' + r[-1]
